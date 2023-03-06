@@ -10,18 +10,18 @@ services:
       - 8080:8080
     environment:
       - MONGODB_URL=mongodb://localhost:27017/mindy
-    networks: 
+    networks:
       - mongo-compose-network
 
   db:
     container_name: db
-    image: mongo
+    image: mongo:4.4
     restart: always
     volumes:
       - ./data/db:/data/db
     ports:
       - "27017:27017"
-    networks: 
+    networks:
       - mongo-compose-network
 
 networks:
