@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
-const MONGODB_URL = process.env.MONGODB_URL || ''
-
 /**
  * Connect to the mongoDb instance
  */
-export const connectDb = async (): Promise<void> => {
-  return mongoose
-    .connect(MONGODB_URL)
-    .then(() => console.log(`✅ Connection to ${MONGODB_URL} successfull`))
+export const ConnectDb = async (uri: string): Promise<void> => {
+  mongoose
+    .set('strictQuery', false)
+    .connect(uri)
+    .then(() => console.log(`✅ Connection to ${uri} successfull`))
+    .catch(err => console.log(err))
 }
