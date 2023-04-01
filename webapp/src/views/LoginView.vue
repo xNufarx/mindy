@@ -1,38 +1,46 @@
 <template>
-  <Page :header="false" content-centered>
+  <Page :header="false" centered>
     <form id="login-form" class="box p-5">
       <div class="field">
         <h1 class="title is-3 has-text-centered">🧠 Mindy</h1>
       </div>
       <div class="field">
-        <p class="control is-expanded">
+        <div class="control is-expanded has-icons-left">
           <input
             class="input"
             type="text"
-            v-model="name"
+            v-model="username"
             placeholder="Identifiant" />
-        </p>
+          <span class="icon is-small is-left">
+            <i class="fa-solid fa-address-card"></i>
+          </span>
+        </div>
       </div>
       <div class="field">
-        <p class="control is-expanded">
+        <div class="control is-expanded has-icons-left">
           <input
             class="input"
             type="password"
             v-model="password"
             placeholder="Mot de passe" />
-        </p>
+          <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+          </span>
+        </div>
       </div>
       <div class="field is-grouped is-grouped-centered">
-        <p class="control">
+        <div class="control">
           <button
             @click="Connect"
             :class="{ 'is-loading': isProcessing }"
-            class="button is-primary">
+            class="button is-success">
             Connexion
           </button>
-        </p>
-        <p v-if="configurationStore.configuration.CanRegister" class="control">
-          <button class="button is-info" @click="Register">Inscription</button>
+        </div>
+        <p
+          v-if="configurationStore.configuration.CanRegister && !isProcessing"
+          class="control">
+          <button class="button is-ghost" @click="Register">Inscription</button>
         </p>
       </div>
     </form>
@@ -48,14 +56,14 @@
 
   const authStore = useIdentityStore()
   const configurationStore = useConfigurationStore()
-  const name = ref('')
+  const username = ref('')
   const password = ref('')
   const isProcessing = ref(false)
 
   const Connect = async () => {
     isProcessing.value = true
     try {
-      await authStore.Login(name.value, password.value)
+      await authStore.Login(username.value, password.value)
 
       if (authStore.isAuthenticated) {
         const { redirect } = router.currentRoute.value.query

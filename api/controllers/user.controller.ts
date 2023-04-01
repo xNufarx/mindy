@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { hasScope } from '../helpers/jwt.helpers'
 import { DeleteUser, GetAllUsers } from '../services/user.service'
 
 export const GetAll: RequestHandler = async (_req, res) => {
@@ -12,7 +13,8 @@ export const Delete: RequestHandler = async (req, res) => {
   }
 
   const canDeleteUser =
-    res.locals.token.id !== req.params.id && !res.locals.token.isAdmin
+    res.locals.token.sub !== req.params.id &&
+    !hasScope(res.locals.token, 'admin')
 
   if (canDeleteUser) {
     return res.sendStatus(401)

@@ -14,15 +14,22 @@ export const router = createRouter({
   routes: [
     {
       path: '/login',
-      component: () => import('./views/Login.vue')
+      component: () => import('./views/LoginView.vue')
     },
     {
       path: '/register',
-      component: () => import('./views/Register.vue')
+      component: () => import('./views/RegisterView.vue')
+    },
+    {
+      path: '/users',
+      component: () => import('./views/UsersView.vue'),
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/',
-      component: () => import('./views/UsersList.vue'),
+      component: () => import('./views/HomeView.vue'),
       meta: {
         auth: true
       }

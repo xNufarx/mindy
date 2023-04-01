@@ -3,7 +3,7 @@ import { decodeToken } from '../helpers/jwt.helpers'
 
 export const jwtTokenDecoder: RequestHandler = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '')
+    const token = req.header('Authorization')?.split(' ')[1]
 
     if (token) {
       const decoded = decodeToken(token)

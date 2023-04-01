@@ -7,11 +7,13 @@ export const DeleteUser = async (id: string): Promise<boolean> => {
   })
 
   if (!user) {
+    console.log(`User not found with id ${id}`)
     return false
   }
 
   await user.deleteOne()
 
+  console.log(`User ${id} deleted`)
   return true
 }
 

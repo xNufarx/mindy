@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { createToken } from '../helpers/jwt.helpers'
+import { createToken, getUserScope } from '../helpers/jwt.helpers'
 import { UserModel } from '../repositories/user.repository'
 
 export const IsUsernameAvailable = async (
@@ -21,13 +21,17 @@ export const RegisterUser = async (
     throw new Error(`Username ${username} already taken`)
   }
 
+  const nbUsers = await (await UserModel.find()).length
+
   const user = new UserModel({
     username,
     password,
-    email
+    email,
+    isAdmin: nbUsers === 0
   })
 
   await user.save()
+  console.info(`User ${username} created`)
 }
 
 export interface AuthenticationResult {
@@ -37,6 +41,7 @@ export interface AuthenticationResult {
     id: string
     username: string
     avatar?: string
+    scope: string
   }
 }
 
@@ -59,6 +64,7 @@ export const AuthenticateUser = async (
   }
 
   const token = createToken(user.toObject())
+  const scope = getUserScope(user)
 
   return {
     accessToken: token,
@@ -66,7 +72,8 @@ export const AuthenticateUser = async (
     user: {
       id: user._id.toString(),
       username: user.username,
-      avatar: user.avatar
+      avatar: user.avatar,
+      scope
     }
   }
 }

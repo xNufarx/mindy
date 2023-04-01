@@ -4,12 +4,19 @@
     <div class="modal-content">
       <slot></slot>
     </div>
-    <button class="modal-close is-large" aria-label="close"></button>
+    <button
+      v-if="closable"
+      class="modal-close is-large"
+      aria-label="close"></button>
   </article>
 </template>
 
 <script setup lang="ts">
   defineProps({
-    active: Boolean
+    active: Boolean,
+    closable: {
+      type: Boolean,
+      default: true
+    }
   })
 </script>

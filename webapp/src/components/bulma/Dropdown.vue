@@ -1,7 +1,7 @@
 <template>
   <div
     @click="isOpen = !isOpen"
-    :class="{ 'is-active': isOpen }"
+    :class="{ 'is-active': isOpen, 'is-up': up, 'is-right': right }"
     class="dropdown">
     <div class="dropdown-trigger">
       <slot name="trigger"> </slot>
@@ -16,6 +16,11 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
+
+  defineProps({
+    right: Boolean,
+    up: Boolean
+  })
 
   const isOpen = ref(false)
 </script>

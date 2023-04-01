@@ -8,15 +8,23 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY || ''
 export const createToken = (user: HydratedDocument<UserEntity>) =>
   sign(
     {
-      id: user._id.toString(),
-      username: user.username,
-      isAdmin: user.isAdmin ?? false
+      sub: user._id.toString(),
+      scope: getUserScope(user)
     } as AppJwtPayLoad,
     SECRET_KEY,
     {
       expiresIn: '1 days'
     }
   )
+
+export const getUserScope = (user: HydratedDocument<UserEntity>): string =>
+  [user.isAdmin ? 'admin' : ''].join(' ')
+
+export const hasScope = (payload: AppJwtPayLoad, scope: string): boolean =>
+  payload.scope
+    .toLocaleLowerCase()
+    .split(' ')
+    .includes(scope.toLocaleLowerCase())
 
 export const decodeToken = (token: string) =>
   verify(token, SECRET_KEY) as AppJwtPayLoad

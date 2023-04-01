@@ -1,13 +1,15 @@
 <template>
-  <RouterView />
+  <PageLoader v-if="configurationStore.isLoading" />
+  <RouterView v-else />
 </template>
 
 <script setup lang="ts">
+  import PageLoader from './components/layout/PageLoader.vue'
   import { useConfigurationStore } from './stores/configurationStore'
 
   const configurationStore = useConfigurationStore()
 
-  configurationStore.Load()
+  configurationStore.Reload()
 </script>
 
 <style lang="scss">

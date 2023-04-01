@@ -20,8 +20,12 @@
                 :avatar="user.avatar"
                 class="is-24x24" />
             </td>
-            <td>
-              <button @click="Delete(user)" class="button is-small is-danger">
+            <td class="has-text-centered">
+              <button
+                v-if="identityStore.user?.scopes.includes('admin')"
+                @click="Delete(user)"
+                :class="{ 'is-loading': deletingUser === user }"
+                class="button is-small is-danger">
                 <span class="icon is-small">
                   <i class="fas fa-trash"></i>
                 </span>
@@ -29,6 +33,13 @@
             </td>
           </tr>
         </tbody>
+        <tfoot v-if="isLoading">
+          <tr>
+            <td colspan="4">
+              <progress max="100" class="progress is-small is-info" />
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </section>
   </Page>
@@ -41,19 +52,30 @@
   import { UserDto } from '../models/user'
   import { DeleteUser, GetAllUsers } from '../repositories/user.repository'
   import { router } from '../router'
+  import { useConfigurationStore } from '../stores/configurationStore'
   import { useIdentityStore } from '../stores/identityStore'
 
+  const identityStore = useIdentityStore()
   const users = ref<UserDto[]>([])
+  const isLoading = ref(false)
+  const deletingUser = ref<UserDto>()
 
   const LoadUsers = async () => {
+    isLoading.value = true
     users.value = await GetAllUsers()
+    isLoading.value = false
   }
 
   const Delete = async (user: UserDto): Promise<void> => {
-    const identityStore = useIdentityStore()
-
+    deletingUser.value = user
     await DeleteUser(user.id)
     await LoadUsers()
+    deletingUser.value = undefined
+
+    if (users.value.length === 0) {
+      const configurationStore = useConfigurationStore()
+      await configurationStore.Reload()
+    }
 
     if (user.id === identityStore.user?.id) {
       identityStore.Logout()

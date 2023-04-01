@@ -3,11 +3,16 @@ import { useIdentityStore } from './../stores/identityStore'
 const GetDefaultOptions = (): RequestInit => {
   const identityStore = useIdentityStore()
 
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json'
+  }
+
+  if (identityStore.accessToken) {
+    headers['Authorization'] = `Bearer ${identityStore.accessToken}`
+  }
+
   const options: RequestInit = {
-    headers: {
-      Authorization: `Bearer ${identityStore.accessToken}`,
-      'Content-Type': 'application/json'
-    },
+    headers,
     redirect: 'manual',
     referrerPolicy: 'no-referrer'
   }

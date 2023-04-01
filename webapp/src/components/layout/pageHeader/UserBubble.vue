@@ -1,35 +1,35 @@
 <template>
-  <Dropdown v-if="identityStore.isAuthenticated" class="is-right">
+  <NavBarDropdown v-if="identityStore.isAuthenticated" right>
     <template #trigger>
-      <Avatar
-        v-if="identityStore.user?.avatar"
-        :avatar="identityStore.user?.avatar"
-        class="is-32x32 is-clickable" />
-      <button
-        v-else
-        :title="identityStore.user?.username"
-        class="button is-rounded">
-        {{ userNameInitial }}
-      </button>
+      <a
+        class="navbar-link is-arrowless is-uppercase"
+        :title="identityStore.user?.username">
+        <Avatar
+          v-if="identityStore.user?.avatar"
+          :avatar="identityStore.user?.avatar" />
+        <span v-else>
+          {{ userNameInitial }}
+        </span>
+      </a>
     </template>
     <template #content>
-      <a class="dropdown-item" @click.prevent="Logout">
-        <span class="icon-text">
+      <a class="navbar-item" @click.prevent="Logout">
+        <div class="icon-text is-flex-wrap-nowrap">
           <span class="icon">
             <i class="fa-solid fa-door-open"></i>
           </span>
           <span>Déconnexion</span>
-        </span>
+        </div>
       </a>
     </template>
-  </Dropdown>
+  </NavBarDropdown>
 </template>
 <script setup lang="ts">
   import { computed } from 'vue'
   import { useRouter } from 'vue-router'
   import { useIdentityStore } from '../../../stores/identityStore'
   import Avatar from '../../Avatar.vue'
-  import Dropdown from '../../Dropdown.vue'
+  import NavBarDropdown from '../../bulma/NavBarDropdown.vue'
 
   const router = useRouter()
   const identityStore = useIdentityStore()

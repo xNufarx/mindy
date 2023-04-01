@@ -1,4 +1,4 @@
-export interface ApplicationConfiguration {
+export interface ConfigurationDto {
   CanRegister: boolean
   MustRegister: boolean
 }

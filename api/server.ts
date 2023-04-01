@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import { jwtTokenDecoder } from './middlewares/identity.middleware'
 import { ConnectDb } from './repositories/db'
+import { configurationRouter } from './routes/configuration.router'
 import { identityRouter } from './routes/identity.router'
 import { rootRouter } from './routes/root.router'
 import { userRouter } from './routes/user.router'
@@ -16,6 +17,7 @@ const app = express()
   .use(jwtTokenDecoder)
 
 app.use('/api', rootRouter)
+app.use('/api/config', configurationRouter)
 app.use('/api/identity', identityRouter)
 app.use('/api/user', userRouter)
 

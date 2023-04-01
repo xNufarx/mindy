@@ -15,11 +15,15 @@ export const useIdentityStore = defineStore('identity', () => {
     if (result) {
       accessToken.value = result.accessToken
       renewToken.value = result.renewToken
-      user.value = result.user
+
+      const { scope, ...rawUser } = result.user
+
+      user.value = {
+        ...rawUser,
+        scopes: result.user.scope.split(' ')
+      }
     }
   }
-
-  const Register = async (login: string, paswword: string) => {}
 
   const Logout = () => {
     user.value = undefined
@@ -33,7 +37,6 @@ export const useIdentityStore = defineStore('identity', () => {
     user,
     isAuthenticated,
     Login,
-    Logout,
-    Register
+    Logout
   }
 })
